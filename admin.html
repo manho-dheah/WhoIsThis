@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>منهو؟ | الإدارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="/">منهو؟</a>
+    <button id="adminLogout" class="ghost-btn hidden">خروج الإدارة</button>
+  </header>
+
+  <main class="page-shell admin-shell">
+    <section id="adminLoginCard" class="panel narrow-panel">
+      <span class="mini-label">Admin</span>
+      <h1>لوحة الإدارة</h1>
+      <p class="muted">هذه الصفحة لك فقط.</p>
+      <form id="adminLoginForm" class="stack">
+        <label>كلمة مرور الإدارة<input id="adminPassword" type="password" required /></label>
+        <button class="primary-btn" type="submit">دخول</button>
+        <p id="adminLoginMessage" class="form-message"></p>
+      </form>
+    </section>
+
+    <section id="adminDashboard" class="hidden">
+      <div class="section-head">
+        <div><span class="mini-label">الإدارة</span><h1>لوحة التحكم</h1></div>
+        <button id="refreshAdmin" class="ghost-btn">تحديث</button>
+      </div>
+
+      <section class="panel">
+        <h2>إضافة عضو هيئة تدريس</h2>
+        <form id="addProfessorForm" class="inline-form">
+          <input id="profName" placeholder="الاسم" maxlength="120" required />
+          <input id="profDepartment" placeholder="القسم" maxlength="120" required />
+          <button class="primary-btn" type="submit">إضافة</button>
+        </form>
+        <p id="addProfessorMessage" class="form-message"></p>
+      </section>
+
+      <section class="panel">
+        <div class="section-head compact"><h2>البلاغات</h2><span id="reportsCount" class="count-pill">0</span></div>
+        <div id="reportsList" class="admin-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head compact"><h2>آخر التقييمات</h2><span id="reviewsCount" class="count-pill">0</span></div>
+        <div id="reviewsList" class="admin-list"></div>
+      </section>
+    </section>
+  </main>
+<script src="/admin.js" type="module"></script>
+</body>
+</html>

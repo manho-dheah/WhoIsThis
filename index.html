@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="منصة طلابية مستقلة لتبادل التجارب الأكاديمية." />
+  <title>منهو؟ | دخول الطلاب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="login-body">
+  <main class="login-shell">
+    <section class="brand-panel">
+      <span class="eyebrow">منصة طلابية مستقلة</span>
+      <h1>منهو؟</h1>
+      <p>تجارب أكاديمية صادقة تساعد الطلاب على الاستعداد للمقررات واتخاذ قرارات أفضل.</p>
+      <div class="privacy-badge">لا أسماء · لا أرقام جامعية · لا حسابات</div>
+    </section>
+
+    <section class="login-card" aria-labelledby="login-title">
+      <div>
+        <span class="mini-label">دخول الطلاب</span>
+        <h2 id="login-title">أدخل كلمة الدخول</h2>
+        <p class="muted">الكلمة مخصصة لطلاب الكلية فقط. لا تشاركها خارج مجتمع الطلاب.</p>
+      </div>
+      <form id="loginForm" class="stack">
+        <label for="password">كلمة الدخول</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+        <button class="primary-btn" type="submit">دخول المنصة</button>
+        <p id="loginMessage" class="form-message" role="status"></p>
+      </form>
+      <p class="tiny muted">باستخدام المنصة أنت توافق على كتابة تجارب أكاديمية محترمة وتجنب الإساءة أو نشر معلومات شخصية.</p>
+      <a class="admin-link" href="/admin.html">إدارة المنصة</a>
+    </section>
+  </main>
+<script>
+(async () => {
+  try {
+    const s = await fetch('/api/session', { credentials: 'include' }).then(r => r.json());
+    if (s.authenticated) location.replace('/app.html');
+  } catch {}
+})();
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.currentTarget.querySelector('button');
+  const msg = document.getElementById('loginMessage');
+  btn.disabled = true;
+  msg.textContent = 'جاري التحقق…';
+  msg.className = 'form-message';
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: document.getElementById('password').value })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'تعذر تسجيل الدخول');
+    location.replace('/app.html');
+  } catch (err) {
+    msg.textContent = err.message;
+    msg.className = 'form-message error';
+  } finally { btn.disabled = false; }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>منهو؟ | تجارب الطلاب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="/app.html">منهو؟</a>
+    <nav class="top-actions">
+      <button id="guidelinesBtn" class="ghost-btn">قواعد المجتمع</button>
+      <button id="logoutBtn" class="ghost-btn">خروج</button>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <span class="eyebrow">تجربتك تفيد غيرك</span>
+      <h1>ابحث عن عضو هيئة التدريس</h1>
+      <p>اقرأ تجارب طلاب سابقين أو أضف تقييمك بدون اسم أو حساب.</p>
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="ابحث بالاسم أو القسم…" autocomplete="off" />
+      </div>
+    </section>
+
+    <section class="section-head">
+      <div>
+        <span class="mini-label">الدليل</span>
+        <h2>أعضاء هيئة التدريس</h2>
+      </div>
+      <span id="countLabel" class="count-pill">—</span>
+    </section>
+
+    <section id="professorGrid" class="professor-grid" aria-live="polite"></section>
+    <div id="emptyState" class="empty-state hidden">لا توجد نتائج مطابقة.</div>
+  </main>
+
+  <dialog id="professorDialog" class="dialog-card wide-dialog">
+    <button class="dialog-close" data-close="professorDialog" aria-label="إغلاق">×</button>
+    <div id="professorContent"></div>
+  </dialog>
+
+  <dialog id="reviewDialog" class="dialog-card">
+    <button class="dialog-close" data-close="reviewDialog" aria-label="إغلاق">×</button>
+    <div class="dialog-header">
+      <span class="mini-label">أضف تجربتك</span>
+      <h2 id="reviewTitle">تقييم</h2>
+      <p class="muted">قيّم التجربة الأكاديمية فقط. تجنب الأسماء الشخصية والاتهامات والمعلومات الخاصة.</p>
+    </div>
+    <form id="reviewForm" class="stack">
+      <input id="reviewProfessorId" type="hidden" />
+      <label>المقرر
+        <input id="courseName" maxlength="120" placeholder="مثال: علم الأمراض" required />
+      </label>
+      <label>الفصل الدراسي
+        <input id="academicTerm" maxlength="30" placeholder="مثال: 2026 - الفصل الأول" required />
+      </label>
+      <div class="rating-grid">
+        <label>وضوح الشرح<select id="clarity" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+        <label>عدالة التقييم<select id="fairness" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+        <label>التنظيم<select id="organization" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+        <label>صعوبة المقرر<select id="difficulty" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+        <label>التقييم العام<select id="overallRating" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+      </div>
+      <label>تعليق اختياري
+        <textarea id="comment" maxlength="1200" rows="5" placeholder="اكتب ما سيساعد طالبًا قادمًا: أسلوب الشرح، طبيعة الاختبارات، أهم نصيحة…"></textarea>
+      </label>
+      <button class="primary-btn" type="submit">إرسال التقييم</button>
+      <p id="reviewMessage" class="form-message" role="status"></p>
+    </form>
+  </dialog>
+
+  <dialog id="guidelinesDialog" class="dialog-card">
+    <button class="dialog-close" data-close="guidelinesDialog" aria-label="إغلاق">×</button>
+    <span class="mini-label">قواعد المجتمع</span>
+    <h2>تجربة مفيدة، لا مساحة للإساءة</h2>
+    <div class="rules">
+      <p>✓ تحدث عن المقرر والشرح والتنظيم والاختبارات.</p>
+      <p>✓ اكتب ما يفيد طالبًا سيأخذ المقرر بعدك.</p>
+      <p>× لا تنشر معلومات شخصية أو أرقام تواصل أو اتهامات خطيرة.</p>
+      <p>× لا تستخدم السب أو السخرية أو التنمر.</p>
+    </div>
+    <p class="tiny muted">هذه منصة طلابية مستقلة ولا تمثل الجامعة أو الكلية رسميًا.</p>
+  </dialog>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
