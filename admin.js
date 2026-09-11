@@ -43,11 +43,29 @@ document.getElementById('adminLoginForm').addEventListener('submit', async e => 
 });
 
 document.getElementById('addProfessorForm').addEventListener('submit', async e => {
-  e.preventDefault(); const msg = document.getElementById('addProfessorMessage');
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const msg = document.getElementById('addProfessorMessage');
+
   try {
-    await api('/api/admin-add-professor', {method:'POST', body:JSON.stringify({name:document.getElementById('profName').value, department:document.getElementById('profDepartment').value})});
-    e.currentTarget.reset(); msg.textContent='تمت الإضافة ✓'; await loadAdmin();
-  } catch(err){ msg.textContent=err.message; msg.className='form-message error'; }
+    await api('/api/admin-add-professor', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: document.getElementById('profName').value,
+        department: document.getElementById('profDepartment').value
+      })
+    });
+
+    form.reset();
+    msg.textContent = 'تمت الإضافة ✓';
+    msg.className = 'form-message';
+
+    await loadAdmin();
+  } catch (err) {
+    msg.textContent = err.message;
+    msg.className = 'form-message error';
+  }
 });
 
 document.getElementById('reviewsList').addEventListener('click', async e => {
