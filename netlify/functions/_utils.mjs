@@ -13,11 +13,7 @@ export function json(statusCode, body, headers = {}) {
 }
 
 export function parseBody(event) {
-  try {
-    return JSON.parse(event.body || '{}');
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(event.body || '{}'); } catch { return {}; }
 }
 
 export function getCookie(event, name) {
@@ -27,9 +23,7 @@ export function getCookie(event, name) {
   return found ? decodeURIComponent(found.slice(name.length + 1)) : null;
 }
 
-function b64url(input) {
-  return Buffer.from(input).toString('base64url');
-}
+function b64url(input) { return Buffer.from(input).toString('base64url'); }
 
 export function makeSession(role, ttlSeconds = 60 * 60 * 24 * 7) {
   const secret = process.env.SESSION_SECRET;
@@ -52,9 +46,7 @@ export function verifySession(event, expectedRole) {
   try {
     const parsed = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
     return parsed.role === expectedRole && parsed.exp > Math.floor(Date.now() / 1000);
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 
 export function cookieHeader(name, value, event, maxAge = 60 * 60 * 24 * 7) {
@@ -86,7 +78,16 @@ export function cleanText(value, max = 1200) {
   return String(value ?? '').trim().slice(0, max);
 }
 
+export function cleanSingleLine(value, max = 120) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
 export function rating(value) {
   const n = Number(value);
   return Number.isInteger(n) && n >= 1 && n <= 5 ? n : null;
+}
+
+export function integerId(value) {
+  const n = Number(value);
+  return Number.isInteger(n) && n > 0 ? n : null;
 }

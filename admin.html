@@ -19,41 +19,88 @@
     <section id="adminLoginCard" class="panel narrow-panel">
       <span class="mini-label">Admin</span>
       <h1>لوحة الإدارة</h1>
-      <p class="muted">هذه الصفحة لك فقط.</p>
+      <p class="muted">هذه الصفحة خاصة بإدارة المنصة.</p>
       <form id="adminLoginForm" class="stack">
-        <label>كلمة مرور الإدارة<input id="adminPassword" type="password" required /></label>
+        <label>كلمة مرور الإدارة<input id="adminPassword" type="password" autocomplete="current-password" required /></label>
         <button class="primary-btn" type="submit">دخول</button>
         <p id="adminLoginMessage" class="form-message"></p>
       </form>
     </section>
 
     <section id="adminDashboard" class="hidden">
-      <div class="section-head">
+      <div class="section-head admin-title-row">
         <div><span class="mini-label">الإدارة</span><h1>لوحة التحكم</h1></div>
-        <button id="refreshAdmin" class="ghost-btn">تحديث</button>
+        <button id="refreshAdmin" class="ghost-btn">تحديث البيانات</button>
       </div>
 
+      <section class="dashboard-stats">
+        <article class="summary-card"><span>الأعضاء النشطون</span><strong id="activeProfessorsCount">0</strong></article>
+        <article class="summary-card"><span>كل التقييمات</span><strong id="reviewsCountTop">0</strong></article>
+        <article class="summary-card"><span>البلاغات المفتوحة</span><strong id="openReportsCount">0</strong></article>
+      </section>
+
       <section class="panel">
-        <h2>إضافة عضو هيئة تدريس</h2>
+        <div class="section-head compact"><div><span class="mini-label">الدليل</span><h2>إضافة عضو هيئة تدريس</h2></div></div>
         <form id="addProfessorForm" class="inline-form">
           <input id="profName" placeholder="الاسم" maxlength="120" required />
-          <input id="profDepartment" placeholder="القسم" maxlength="120" required />
+          <input id="profDepartment" list="departmentSuggestions" placeholder="القسم" maxlength="120" required />
+          <datalist id="departmentSuggestions"></datalist>
           <button class="primary-btn" type="submit">إضافة</button>
         </form>
         <p id="addProfessorMessage" class="form-message"></p>
       </section>
 
       <section class="panel">
-        <div class="section-head compact"><h2>البلاغات</h2><span id="reportsCount" class="count-pill">0</span></div>
+        <div class="section-head compact">
+          <div><span class="mini-label">إدارة الدليل</span><h2>أعضاء هيئة التدريس</h2></div>
+          <span id="professorsCount" class="count-pill">0</span>
+        </div>
+        <div class="admin-filters">
+          <input id="professorSearch" type="search" placeholder="ابحث بالاسم أو القسم…" />
+          <select id="professorStatusFilter"><option value="all">الكل</option><option value="active">النشطون</option><option value="hidden">المخفون</option></select>
+        </div>
+        <div id="professorsAdminList" class="admin-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head compact">
+          <div><span class="mini-label">المراجعة</span><h2>البلاغات</h2></div>
+          <span id="reportsCount" class="count-pill">0</span>
+        </div>
+        <div class="admin-filters two-cols">
+          <select id="reportStatusFilter"><option value="open">المفتوحة</option><option value="all">الكل</option><option value="resolved">المغلقة</option></select>
+        </div>
         <div id="reportsList" class="admin-list"></div>
       </section>
 
       <section class="panel">
-        <div class="section-head compact"><h2>آخر التقييمات</h2><span id="reviewsCount" class="count-pill">0</span></div>
+        <div class="section-head compact">
+          <div><span class="mini-label">المحتوى</span><h2>التقييمات</h2></div>
+          <span id="reviewsCount" class="count-pill">0</span>
+        </div>
+        <div class="admin-filters">
+          <input id="reviewSearch" type="search" placeholder="ابحث باسم الدكتور أو المقرر أو التعليق…" />
+          <select id="reviewStatusFilter"><option value="all">كل الحالات</option><option value="published">المنشورة</option><option value="hidden">المخفية</option></select>
+        </div>
         <div id="reviewsList" class="admin-list"></div>
       </section>
     </section>
   </main>
-<script src="/admin.js" type="module"></script>
+
+  <dialog id="editProfessorDialog" class="dialog-card small-dialog">
+    <button class="dialog-close" data-close="editProfessorDialog" aria-label="إغلاق">×</button>
+    <span class="mini-label">تعديل</span>
+    <h2>بيانات عضو هيئة التدريس</h2>
+    <form id="editProfessorForm" class="stack">
+      <input id="editProfessorId" type="hidden" />
+      <label>الاسم<input id="editProfessorName" maxlength="120" required /></label>
+      <label>القسم<input id="editProfessorDepartment" list="departmentSuggestions" maxlength="120" required /></label>
+      <button class="primary-btn" type="submit">حفظ التعديلات</button>
+      <p id="editProfessorMessage" class="form-message"></p>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+  <script src="/admin.js" type="module"></script>
 </body>
 </html>

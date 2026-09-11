@@ -26,16 +26,23 @@
       <div class="search-wrap">
         <input id="searchInput" type="search" placeholder="ابحث بالاسم أو القسم…" autocomplete="off" />
       </div>
+      <div class="filter-row" aria-label="خيارات الفرز والتصفية">
+        <label class="filter-field"><span>القسم</span><select id="departmentFilter"><option value="">كل الأقسام</option></select></label>
+        <label class="filter-field"><span>الترتيب</span><select id="sortSelect">
+          <option value="name">الاسم</option>
+          <option value="rating">الأعلى تقييمًا</option>
+          <option value="reviews">الأكثر تقييمًا</option>
+          <option value="difficulty">الأقل صعوبة</option>
+        </select></label>
+      </div>
     </section>
 
     <section class="section-head">
-      <div>
-        <span class="mini-label">الدليل</span>
-        <h2>أعضاء هيئة التدريس</h2>
-      </div>
+      <div><span class="mini-label">الدليل</span><h2>أعضاء هيئة التدريس</h2></div>
       <span id="countLabel" class="count-pill">—</span>
     </section>
 
+    <section id="loadingState" class="empty-state">جاري تحميل الدليل…</section>
     <section id="professorGrid" class="professor-grid" aria-live="polite"></section>
     <div id="emptyState" class="empty-state hidden">لا توجد نتائج مطابقة.</div>
   </main>
@@ -50,28 +57,41 @@
     <div class="dialog-header">
       <span class="mini-label">أضف تجربتك</span>
       <h2 id="reviewTitle">تقييم</h2>
-      <p class="muted">قيّم التجربة الأكاديمية فقط. تجنب الأسماء الشخصية والاتهامات والمعلومات الخاصة.</p>
+      <p class="muted">قيّم التجربة الأكاديمية فقط. لا تكتب معلومات شخصية أو اتهامات أو بيانات تواصل.</p>
     </div>
     <form id="reviewForm" class="stack">
       <input id="reviewProfessorId" type="hidden" />
-      <label>المقرر
-        <input id="courseName" maxlength="120" placeholder="مثال: علم الأمراض" required />
-      </label>
-      <label>الفصل الدراسي
-        <input id="academicTerm" maxlength="30" placeholder="مثال: 2026 - الفصل الأول" required />
-      </label>
-      <div class="rating-grid">
-        <label>وضوح الشرح<select id="clarity" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
-        <label>عدالة التقييم<select id="fairness" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
-        <label>التنظيم<select id="organization" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
-        <label>صعوبة المقرر<select id="difficulty" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
-        <label>التقييم العام<select id="overallRating" required><option value="">—</option><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+      <label>المقرر<input id="courseName" maxlength="120" placeholder="مثال: علم الأمراض" required /></label>
+      <label>الفصل الدراسي<input id="academicTerm" maxlength="30" placeholder="مثال: 2026 - الفصل الأول" required /></label>
+
+      <div class="rating-form-grid">
+        <div class="rating-field"><span>وضوح الشرح</span><div class="rating-choice" data-rating-group="clarity"></div><input id="clarity" type="hidden" required /></div>
+        <div class="rating-field"><span>عدالة التقييم</span><div class="rating-choice" data-rating-group="fairness"></div><input id="fairness" type="hidden" required /></div>
+        <div class="rating-field"><span>التنظيم</span><div class="rating-choice" data-rating-group="organization"></div><input id="organization" type="hidden" required /></div>
+        <div class="rating-field"><span>التعامل مع الطلاب</span><div class="rating-choice" data-rating-group="interaction"></div><input id="interaction" type="hidden" required /></div>
+        <div class="rating-field"><span>صعوبة المقرر</span><div class="rating-choice" data-rating-group="difficulty"></div><input id="difficulty" type="hidden" required /></div>
+        <div class="rating-field emphasis"><span>التقييم العام</span><div class="rating-choice" data-rating-group="overallRating"></div><input id="overallRating" type="hidden" required /></div>
       </div>
+
       <label>تعليق اختياري
         <textarea id="comment" maxlength="1200" rows="5" placeholder="اكتب ما سيساعد طالبًا قادمًا: أسلوب الشرح، طبيعة الاختبارات، أهم نصيحة…"></textarea>
+        <span id="commentCount" class="char-count">0 / 1200</span>
       </label>
+      <label class="check-row"><input id="reviewAgreement" type="checkbox" required /><span>أؤكد أن التقييم يصف تجربتي الأكاديمية وسألتزم بقواعد المجتمع.</span></label>
       <button class="primary-btn" type="submit">إرسال التقييم</button>
       <p id="reviewMessage" class="form-message" role="status"></p>
+    </form>
+  </dialog>
+
+  <dialog id="reportDialog" class="dialog-card small-dialog">
+    <button class="dialog-close" data-close="reportDialog" aria-label="إغلاق">×</button>
+    <span class="mini-label">إبلاغ</span>
+    <h2>لماذا تريد الإبلاغ؟</h2>
+    <form id="reportForm" class="stack">
+      <input id="reportReviewId" type="hidden" />
+      <textarea id="reportReason" maxlength="400" rows="4" placeholder="اكتب سببًا مختصرًا وواضحًا…" required></textarea>
+      <button class="primary-btn" type="submit">إرسال البلاغ</button>
+      <p id="reportMessage" class="form-message"></p>
     </form>
   </dialog>
 
@@ -80,14 +100,15 @@
     <span class="mini-label">قواعد المجتمع</span>
     <h2>تجربة مفيدة، لا مساحة للإساءة</h2>
     <div class="rules">
-      <p>✓ تحدث عن المقرر والشرح والتنظيم والاختبارات.</p>
+      <p>✓ تحدث عن المقرر والشرح والتنظيم والاختبارات والتعامل الأكاديمي.</p>
       <p>✓ اكتب ما يفيد طالبًا سيأخذ المقرر بعدك.</p>
-      <p>× لا تنشر معلومات شخصية أو أرقام تواصل أو اتهامات خطيرة.</p>
-      <p>× لا تستخدم السب أو السخرية أو التنمر.</p>
+      <p>× لا تنشر معلومات شخصية أو أرقام تواصل أو روابط.</p>
+      <p>× لا تستخدم السب أو السخرية أو التنمر أو الاتهامات الخطيرة.</p>
     </div>
     <p class="tiny muted">هذه منصة طلابية مستقلة ولا تمثل الجامعة أو الكلية رسميًا.</p>
   </dialog>
 
+  <div id="toast" class="toast hidden" role="status"></div>
   <script src="/app.js" type="module"></script>
 </body>
 </html>

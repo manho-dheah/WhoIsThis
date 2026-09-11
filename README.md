@@ -1,69 +1,34 @@
-# منهو؟ — Faculty Ratings MVP
+# منهو؟ — WhoIsThis V2
 
-A password-gated, anonymous faculty/course feedback website built for GitHub + Netlify + Supabase.
+نسخة V2 تحافظ على بيانات Supabase الحالية وتضيف إدارة كاملة للدليل والتقييمات والبلاغات، وفرزًا وتصفية للطلاب، ومعيار التعامل، وحماية أفضل من التكرار والسبام.
 
-## What is already implemented
+## الترقية من النسخة الحالية
 
-- One shared student access password (no student accounts)
-- Password verified server-side; it is never shipped to the browser or committed to GitHub
-- Signed HttpOnly student session cookie
-- Searchable faculty directory
-- Faculty profile with average ratings and written experiences
-- Anonymous review submission
-- Soft duplicate protection: one review per professor + academic term + browser/device identifier
-- Review reporting
-- Separate admin password and dashboard
-- Admin can add faculty and hide/restore reviews
-- Persistent database in Supabase, independent from GitHub deployments
-- Supabase locked behind RLS; service-role key stays only in Netlify environment variables
+1. **لا تحذفي أي جدول ولا تعيدي تشغيل `schema.sql`.** افتحي Supabase > SQL Editor وشغّلي ملف `migration_v2.sql` مرة واحدة فقط.
+2. بعد نجاح الـmigration، ارفعي ملفات V2 إلى **نفس GitHub repository** واستبدلي الملفات القديمة. يجب أن يبقى مجلد `netlify/functions` كما هو في البنية.
+3. لا تغيّري Environment Variables في Netlify. تبقى القيم الحالية نفسها: `STUDENT_ACCESS_PASSWORD`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
+4. بعد الـCommit إلى `main` سيعمل Netlify Deploy تلقائيًا.
+5. اختبري: دخول طالب > فتح عضو > إرسال تقييم > إرسال بلاغ > لوحة الإدارة > تعديل/إخفاء عضو > إخفاء/إعادة نشر تقييم > إغلاق بلاغ.
 
-## 1. Create Supabase database
+## ما الجديد في V2
 
-1. Create a Supabase project.
-2. Open **SQL Editor**.
-3. Paste and run `schema.sql`.
-4. In Supabase Project Settings > API, copy:
-   - Project URL
-   - `service_role` key — **keep this secret**.
+- عرض أعضاء هيئة التدريس داخل لوحة الإدارة مع البحث والتصفية.
+- تعديل الاسم والقسم.
+- إخفاء/إظهار عضو بدون خسارة تقييماته.
+- حذف العضو فقط إذا لم يكن لديه تقييمات.
+- منع التكرار باسم + قسم على مستوى قاعدة البيانات.
+- بحث وفرز وتصفية في واجهة الطلاب.
+- معيار «التعامل مع الطلاب» للتقييمات الجديدة؛ التقييمات القديمة تبقى سليمة وتظهر `—` لهذا المعيار.
+- عداد أحرف للتعليق وإقرار بقواعد المجتمع.
+- إبلاغ عبر نافذة مخصصة بدل prompt.
+- إدارة البلاغات: مفتوح/مغلق، وإخفاء التقييم من البلاغ مباشرة.
+- إدارة التقييمات: منشور/مخفي وحذف نهائي.
+- حماية server-side من إرسال عدد كبير من التقييمات/البلاغات بسرعة من الجهاز نفسه.
+- Content Security Policy ورؤوس حماية إضافية.
+- رسائل نجاح/خطأ أوضح وتصميم Responsive محسّن.
 
-## 2. Create Netlify environment variables
+## ملاحظات أمان
 
-In Netlify > Site configuration > Environment variables add:
-
-```text
-STUDENT_ACCESS_PASSWORD=your-shared-student-password
-ADMIN_PASSWORD=a-different-strong-admin-password
-SESSION_SECRET=a-long-random-secret-at-least-32-characters
-SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
-```
-
-Never place these values in HTML, JavaScript, GitHub, or screenshots.
-
-## 3. Deploy from GitHub
-
-1. Create a new GitHub repository.
-2. Upload all project files.
-3. In Netlify choose **Add new site > Import an existing project > GitHub**.
-4. Select the repo.
-5. Netlify reads `netlify.toml`; no special build command is required.
-6. Add the environment variables above and redeploy.
-
-After that, every GitHub commit updates the website while Supabase data stays untouched.
-
-## 4. Local development (optional)
-
-Install Node.js, then:
-
-```bash
-npm install
-npx netlify dev
-```
-
-Create a local `.env` with the same environment variables. `.env` should never be committed.
-
-## Important privacy/security note
-
-The browser identifier is only a **soft anti-spam measure**, not proof of identity. A student can clear browser storage or change browsers. If stronger one-person-one-review enforcement is ever required, individual authentication or invitation tokens are needed.
-
-Also keep the site framed around academic experience, not personal attacks. Publish clear community rules and a reporting/removal process.
+- لا تضعي Secret/Service Role Key في GitHub أبدًا.
+- عدم وجود حسابات يعني أن منع التكرار هو تقليل للسبام وليس إثبات هوية قويًا.
+- «إخفاء» عضو هو الخيار الأفضل إذا كان لديه تقييمات؛ الحذف النهائي ممنوع تلقائيًا حين توجد تقييمات.

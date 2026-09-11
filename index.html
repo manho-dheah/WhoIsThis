@@ -35,36 +35,6 @@
       <a class="admin-link" href="/admin.html">إدارة المنصة</a>
     </section>
   </main>
-<script>
-(async () => {
-  try {
-    const s = await fetch('/api/session', { credentials: 'include' }).then(r => r.json());
-    if (s.authenticated) location.replace('/app.html');
-  } catch {}
-})();
-
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.currentTarget.querySelector('button');
-  const msg = document.getElementById('loginMessage');
-  btn.disabled = true;
-  msg.textContent = 'جاري التحقق…';
-  msg.className = 'form-message';
-  try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ password: document.getElementById('password').value })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'تعذر تسجيل الدخول');
-    location.replace('/app.html');
-  } catch (err) {
-    msg.textContent = err.message;
-    msg.className = 'form-message error';
-  } finally { btn.disabled = false; }
-});
-</script>
+<script src="/login.js" type="module"></script>
 </body>
 </html>
