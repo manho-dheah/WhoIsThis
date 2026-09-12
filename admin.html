@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src https://vjtwlbkjpfrtfjiwazdf.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="theme-color" content="#363367" />
   <title>منهو ذية | الإدارة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="/assets/manho-logo.jpg" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" type="image/jpeg" href="./assets/manho-logo.jpg" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <a class="logo logo-with-image" href="/">
-      <span class="top-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></span>
+    <a class="logo logo-with-image" href="./index.html">
+      <span class="top-logo-frame"><img src="./assets/manho-logo.jpg" alt="" /></span>
       <span class="brand-wordmark">منهو ذية</span>
     </a>
     <button id="adminLogout" class="ghost-btn hidden">خروج الإدارة</button>
@@ -23,7 +24,7 @@
   <main class="page-shell admin-shell">
     <section id="adminLoginCard" class="panel narrow-panel admin-login-panel">
       <div class="login-brand-mini">
-        <div class="mini-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></div>
+        <div class="mini-logo-frame"><img src="./assets/manho-logo.jpg" alt="" /></div>
         <div><span class="mini-label">منهو ذية</span><strong>إدارة المنصة</strong></div>
       </div>
       <span class="mini-label">Admin</span>
@@ -110,6 +111,6 @@
   </dialog>
 
   <div id="toast" class="toast hidden" role="status"></div>
-  <script src="/admin.js" type="module"></script>
+  <script src="./admin.js" type="module"></script>
 </body>
 </html>
