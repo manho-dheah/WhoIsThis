@@ -30,6 +30,8 @@ h2 { font-size: clamp(22px, 3vw, 32px); margin-bottom: 12px; }
 .brand-panel { min-height: 620px; padding: clamp(36px, 7vw, 82px); display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
 .brand-panel::after { content: ""; position: absolute; width: 350px; height: 350px; border-radius: 50%; border: 1px solid var(--line); left: -90px; bottom: -120px; box-shadow: 0 0 0 65px rgba(36,55,42,.04), 0 0 0 130px rgba(36,55,42,.025); }
 .brand-panel h1 { font-size: clamp(64px, 10vw, 118px); margin: 18px 0 22px; }
+.brand-logo-image { width: min(360px, 100%); aspect-ratio: 16 / 9; object-fit: cover; border-radius: 24px; border: 1px solid var(--line); box-shadow: var(--shadow); margin-bottom: 22px; position: relative; z-index: 1; }
+
 .brand-panel p { font-size: 18px; max-width: 560px; line-height: 2; color: var(--muted); }
 .privacy-badge { width: fit-content; border: 1px solid var(--line); padding: 10px 14px; border-radius: 999px; font-size: 12px; margin-top: 22px; }
 .login-card { padding: clamp(28px, 5vw, 48px); display: flex; flex-direction: column; justify-content: center; gap: 30px; }
@@ -53,6 +55,10 @@ textarea { resize: vertical; line-height: 1.8; }
 
 .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(18px, 4vw, 56px); border-bottom: 1px solid var(--line); background: rgba(246,244,239,.9); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 10; }
 .logo { font-size: 23px; font-weight: 700; text-decoration: none; }
+.logo-with-image { display: inline-flex; align-items: center; gap: 10px; }
+.logo-with-image img { width: 58px; height: 42px; object-fit: cover; border-radius: 11px; border: 1px solid var(--line); box-shadow: 0 5px 16px rgba(31, 35, 28, .08); }
+.logo-with-image span { line-height: 1; }
+
 .top-actions { display: flex; gap: 10px; }
 .page-shell { width: min(1180px, calc(100% - 36px)); margin: 0 auto; padding: 54px 0 90px; }
 .hero { text-align: center; padding: 54px 20px 50px; }
@@ -155,6 +161,8 @@ textarea { resize: vertical; line-height: 1.8; }
   .professor-grid, .rating-form-grid, .inline-form, .admin-filters, .filter-row { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .topbar { padding: 0 14px; }
+  .logo-with-image img { width: 48px; height: 34px; border-radius: 9px; }
+  .logo-with-image span { font-size: 18px; }
   .page-shell { width: min(100% - 24px, 1180px); padding-top: 28px; }
   .hero { padding: 34px 8px 38px; }
   .dialog-card { padding: 20px; }

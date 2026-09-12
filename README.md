@@ -32,3 +32,19 @@
 - لا تضعي Secret/Service Role Key في GitHub أبدًا.
 - عدم وجود حسابات يعني أن منع التكرار هو تقليل للسبام وليس إثبات هوية قويًا.
 - «إخفاء» عضو هو الخيار الأفضل إذا كان لديه تقييمات؛ الحذف النهائي ممنوع تلقائيًا حين توجد تقييمات.
+
+## V2.1 — logo + initial KAU Medicine faculty directory
+
+- Added `assets/manho-logo.jpg` as the site logo on login, student, and admin pages, and as the favicon.
+- Added `seed_faculty_2026.sql` to preload the faculty directory from `KAU_Medicine_Jeddah_Faculty_Directory(1).xlsx`.
+- The spreadsheet contains 137 rows. One obvious duplicate person (Ashraf Youssef Nasr listed once as Dr and once as Prof) is consolidated, so the seed contains 136 entries.
+- The seed is safe to rerun because it uses `ON CONFLICT DO NOTHING`; it does not delete existing professors, reviews, or reports.
+
+### Apply the faculty list
+
+1. Open Supabase → SQL Editor → New query.
+2. Paste all of `seed_faculty_2026.sql`.
+3. Run it once.
+4. Refresh the student directory and admin dashboard.
+
+If you already created test faculty entries manually, they remain untouched. You can remove/hide those from the admin dashboard if they duplicate imported people under a different spelling/language.
