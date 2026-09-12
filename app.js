@@ -13,6 +13,9 @@ const sortSelect = document.getElementById('sortSelect');
 const countLabel = document.getElementById('countLabel');
 const emptyState = document.getElementById('emptyState');
 const loadingState = document.getElementById('loadingState');
+const departmentChips = document.getElementById('departmentChips');
+const heroProfessorCount = document.getElementById('heroProfessorCount');
+const heroReviewCount = document.getElementById('heroReviewCount');
 
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>'"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[c]));
@@ -54,6 +57,13 @@ function formatNumber(value) {
   return value === null || value === undefined ? '—' : Number(value).toFixed(1).replace('.0', '');
 }
 
+function ratingClass(value) {
+  if (value === null || value === undefined) return 'empty-score';
+  if (Number(value) >= 4) return 'rating-good';
+  if (Number(value) >= 3) return 'rating-mid';
+  return 'rating-low';
+}
+
 function applyFilters() {
   const q = state.search.trim().toLowerCase();
   let list = state.professors.filter((p) => {
@@ -74,6 +84,7 @@ function applyFilters() {
   });
 
   renderProfessors(list);
+  syncDepartmentChips();
 }
 
 function renderProfessors(list) {
@@ -84,27 +95,47 @@ function renderProfessors(list) {
       <div class="professor-card-head">
         <div>
           <h3>${escapeHtml(p.name)}</h3>
-          <p>${escapeHtml(p.department)}</p>
+          <span class="department-badge">${escapeHtml(p.department)}</span>
         </div>
-        <div class="score-circle ${p.average_rating === null ? 'empty-score' : ''}">
-          <strong>${formatNumber(p.average_rating)}</strong><span>/5</span>
+        <div class="score-circle ${ratingClass(p.average_rating)}" aria-label="متوسط التقييم ${formatNumber(p.average_rating)} من 5">
+          <strong>${formatNumber(p.average_rating)}</strong><span>${p.average_rating === null ? 'جديد' : '★ / 5'}</span>
         </div>
       </div>
       <div class="professor-card-meta">
-        <span>${p.review_count ? `${p.review_count} تقييم` : 'لا تقييمات بعد'}</span>
+        <span>${p.review_count ? `${p.review_count} تجربة` : 'لا تجارب بعد'}</span>
         <span>${p.average_difficulty !== null ? `الصعوبة ${formatNumber(p.average_difficulty)}/5` : 'الصعوبة —'}</span>
       </div>
       <div class="card-actions">
-        <button class="small-btn" data-profile="${p.id}">التجارب</button>
-        <button class="primary-btn compact-btn" data-review="${p.id}">قيّم</button>
+        <button class="small-btn profile-primary" data-profile="${p.id}">اقرأ التجارب</button>
+        <button class="small-btn" data-review="${p.id}">أضف تقييمك</button>
       </div>
     </article>
   `).join('');
 }
 
 function fillDepartments() {
-  const departments = [...new Set(state.professors.map((p) => p.department))].sort((a, b) => a.localeCompare(b, 'ar'));
+  const departments = [...new Set(state.professors.map((p) => p.department).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ar'));
   departmentFilter.innerHTML = '<option value="">كل الأقسام</option>' + departments.map((d) => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+
+  const counts = new Map();
+  state.professors.forEach((p) => counts.set(p.department, (counts.get(p.department) || 0) + 1));
+  const featured = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'ar')).slice(0, 8);
+  departmentChips.innerHTML = [
+    '<button type="button" class="department-chip active" data-department-chip="">الكل</button>',
+    ...featured.map(([name]) => `<button type="button" class="department-chip" data-department-chip="${escapeHtml(name)}">${escapeHtml(name)}</button>`),
+  ].join('');
+}
+
+function syncDepartmentChips() {
+  departmentChips.querySelectorAll('[data-department-chip]').forEach((chip) => {
+    chip.classList.toggle('active', chip.dataset.departmentChip === state.department);
+  });
+}
+
+function renderHeroStats() {
+  heroProfessorCount.textContent = state.professors.length.toLocaleString('ar-SA');
+  const totalReviews = state.professors.reduce((sum, p) => sum + Number(p.review_count || 0), 0);
+  heroReviewCount.textContent = totalReviews.toLocaleString('ar-SA');
 }
 
 async function loadProfessors() {
@@ -114,6 +145,7 @@ async function loadProfessors() {
     const data = await api('/api/professors');
     state.professors = data.professors || [];
     fillDepartments();
+    renderHeroStats();
     applyFilters();
   } finally {
     loadingState.classList.add('hidden');
@@ -123,6 +155,14 @@ async function loadProfessors() {
 searchInput.addEventListener('input', () => { state.search = searchInput.value; applyFilters(); });
 departmentFilter.addEventListener('change', () => { state.department = departmentFilter.value; applyFilters(); });
 sortSelect.addEventListener('change', () => { state.sort = sortSelect.value; applyFilters(); });
+departmentChips.addEventListener('click', (e) => {
+  const chip = e.target.closest('[data-department-chip]');
+  if (!chip) return;
+  state.department = chip.dataset.departmentChip;
+  departmentFilter.value = state.department;
+  applyFilters();
+  document.getElementById('directory').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
 grid.addEventListener('click', async (e) => {
   const profileBtn = e.target.closest('[data-profile]');
@@ -156,14 +196,17 @@ async function openProfessor(id) {
     content.innerHTML = `
       <div class="prof-profile-head">
         <div>
-          <span class="mini-label">${escapeHtml(data.professor.department)}</span>
+          <span class="department-badge">${escapeHtml(data.professor.department)}</span>
           <h2>${escapeHtml(data.professor.name)}</h2>
-          <p class="muted">${s.count ? `بناءً على ${s.count} تقييم` : 'لا توجد تقييمات حتى الآن'}</p>
+          <div class="profile-score-wrap">
+            <div class="profile-score-big"><strong>${formatNumber(s.overall)}</strong><span>★ من 5</span></div>
+            <p class="muted">${s.count ? `بناءً على ${s.count} تجربة طلابية` : 'لا توجد تقييمات حتى الآن. يمكنك أن تكون أول من يضيف تجربة.'}</p>
+          </div>
         </div>
         <button class="primary-btn" data-review-from-profile="${data.professor.id}">أضف تقييمك</button>
       </div>
       <div class="stats-grid six-stats">${stats.map(([label, value]) => statCard(label, value)).join('')}</div>
-      <div class="section-head compact"><h3>تجارب الطلاب</h3><span class="count-pill">${s.count} تقييم</span></div>
+      <div class="section-head compact"><h3>تجارب الطلاب</h3><span class="count-pill">${s.count} تجربة</span></div>
       <div class="reviews-stack">
         ${data.reviews.length ? data.reviews.map((r) => `
           <article class="review-card">
@@ -173,6 +216,7 @@ async function openProfessor(id) {
               <span>العام ${r.overall_rating}/5</span>
               <span>الشرح ${r.clarity}/5</span>
               ${r.interaction ? `<span>التعامل ${r.interaction}/5</span>` : ''}
+              <span>الصعوبة ${r.difficulty}/5</span>
             </div>
             ${r.comment ? `<p>${escapeHtml(r.comment)}</p>` : '<p class="muted">تقييم رقمي بدون تعليق.</p>'}
             <div class="review-actions"><button class="small-btn" data-report="${r.id}">إبلاغ</button></div>
@@ -195,7 +239,7 @@ document.getElementById('professorDialog').addEventListener('click', (e) => {
 
 function setupRatingChoices() {
   document.querySelectorAll('.rating-choice').forEach((group) => {
-    group.innerHTML = [1, 2, 3, 4, 5].map((n) => `<button type="button" class="rating-option" data-value="${n}" aria-label="${n} من 5">${n}</button>`).join('');
+    group.innerHTML = [1, 2, 3, 4, 5].map((n) => `<button type="button" class="rating-option" data-value="${n}" aria-label="${n} من 5" title="${n} من 5">★</button>`).join('');
     group.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-value]');
       if (!btn) return;

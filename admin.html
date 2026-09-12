@@ -3,21 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منهو؟ | الإدارة</title>
+  <meta name="theme-color" content="#363367" />
+  <title>منهو ذية | الإدارة</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="/assets/manho-logo.jpg" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <a class="logo logo-with-image" href="/"><img src="/assets/manho-logo.jpg" alt=""><span>منهو؟</span></a>
+    <a class="logo logo-with-image" href="/">
+      <span class="top-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></span>
+      <span class="brand-wordmark">منهو ذية</span>
+    </a>
     <button id="adminLogout" class="ghost-btn hidden">خروج الإدارة</button>
   </header>
 
   <main class="page-shell admin-shell">
-    <section id="adminLoginCard" class="panel narrow-panel">
+    <section id="adminLoginCard" class="panel narrow-panel admin-login-panel">
+      <div class="login-brand-mini">
+        <div class="mini-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></div>
+        <div><span class="mini-label">منهو ذية</span><strong>إدارة المنصة</strong></div>
+      </div>
       <span class="mini-label">Admin</span>
       <h1>لوحة الإدارة</h1>
       <p class="muted">هذه الصفحة خاصة بإدارة المنصة.</p>
@@ -30,7 +38,7 @@
 
     <section id="adminDashboard" class="hidden">
       <div class="section-head admin-title-row">
-        <div><span class="mini-label">الإدارة</span><h1>لوحة التحكم</h1></div>
+        <div><span class="mini-label">الإدارة</span><h1>لوحة التحكم</h1><p class="muted">إدارة الدليل، التقييمات والبلاغات من مكان واحد.</p></div>
         <button id="refreshAdmin" class="ghost-btn">تحديث البيانات</button>
       </div>
 

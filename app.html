@@ -3,57 +3,90 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منهو؟ | تجارب الطلاب</title>
+  <meta name="theme-color" content="#363367" />
+  <title>منهو ذية | تجارب الطلاب</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="/assets/manho-logo.jpg" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <a class="logo logo-with-image" href="/app.html"><img src="/assets/manho-logo.jpg" alt=""><span>منهو؟</span></a>
+    <a class="logo logo-with-image" href="/app.html" aria-label="منهو ذية - الصفحة الرئيسية">
+      <span class="top-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></span>
+      <span class="brand-wordmark">منهو ذية</span>
+    </a>
     <nav class="top-actions">
+      <a class="top-link" href="#directory">الدليل</a>
       <button id="guidelinesBtn" class="ghost-btn">قواعد المجتمع</button>
       <button id="logoutBtn" class="ghost-btn">خروج</button>
     </nav>
   </header>
 
   <main class="page-shell">
-    <section class="hero">
-      <span class="eyebrow">تجربتك تفيد غيرك</span>
-      <h1>ابحث عن عضو هيئة التدريس</h1>
-      <p>اقرأ تجارب طلاب سابقين أو أضف تقييمك بدون اسم أو حساب.</p>
-      <div class="search-wrap">
-        <input id="searchInput" type="search" placeholder="ابحث بالاسم أو القسم…" autocomplete="off" />
+    <section class="hero hero-v2">
+      <div class="hero-copy">
+        <span class="eyebrow gold-eyebrow">من الطلاب للطلاب</span>
+        <h1>مين أخذت معه؟ 👀</h1>
+        <p>ابحث عن عضو هيئة التدريس، اقرأ تجارب سابقة، وخذ فكرة أوضح عن المقرر قبل ما تبدأ.</p>
+
+        <div class="hero-stats" aria-label="إحصائيات الدليل">
+          <div><strong id="heroProfessorCount">—</strong><span>عضو هيئة تدريس</span></div>
+          <div><strong id="heroReviewCount">—</strong><span>تجربة منشورة</span></div>
+          <div><strong>100%</strong><span>تقييمات مجهولة</span></div>
+        </div>
       </div>
-      <div class="filter-row" aria-label="خيارات الفرز والتصفية">
-        <label class="filter-field"><span>القسم</span><select id="departmentFilter"><option value="">كل الأقسام</option></select></label>
-        <label class="filter-field"><span>الترتيب</span><select id="sortSelect">
-          <option value="name">الاسم</option>
-          <option value="rating">الأعلى تقييمًا</option>
-          <option value="reviews">الأكثر تقييمًا</option>
-          <option value="difficulty">الأقل صعوبة</option>
-        </select></label>
+
+      <div class="hero-brand-card" aria-hidden="true">
+        <div class="hero-brand-image"><img src="/assets/manho-logo.jpg" alt="" /></div>
+        <div class="hero-brand-caption"><span>منهو ذية</span><small>اعرف قبل لا تبدأ</small></div>
+      </div>
+
+      <div class="search-panel">
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="ابحث بالاسم أو القسم…" autocomplete="off" />
+        </div>
+        <div id="departmentChips" class="department-chips" aria-label="أقسام سريعة"></div>
+        <div class="filter-row" aria-label="خيارات الفرز والتصفية">
+          <label class="filter-field"><span>القسم</span><select id="departmentFilter"><option value="">كل الأقسام</option></select></label>
+          <label class="filter-field"><span>الترتيب</span><select id="sortSelect">
+            <option value="name">الاسم</option>
+            <option value="rating">الأعلى تقييمًا</option>
+            <option value="reviews">الأكثر تقييمًا</option>
+            <option value="difficulty">الأقل صعوبة</option>
+          </select></label>
+        </div>
       </div>
     </section>
 
-    <section class="section-head">
-      <div><span class="mini-label">الدليل</span><h2>أعضاء هيئة التدريس</h2></div>
-      <span id="countLabel" class="count-pill">—</span>
-    </section>
+    <section id="directory" class="directory-section">
+      <div class="section-head directory-head">
+        <div><span class="mini-label">الدليل</span><h2>أعضاء هيئة التدريس</h2><p class="muted section-subtitle">اضغط على «اقرأ التجارب» لرؤية التفاصيل والتقييمات.</p></div>
+        <span id="countLabel" class="count-pill">—</span>
+      </div>
 
-    <section id="loadingState" class="empty-state">جاري تحميل الدليل…</section>
-    <section id="professorGrid" class="professor-grid" aria-live="polite"></section>
-    <div id="emptyState" class="empty-state hidden">لا توجد نتائج مطابقة.</div>
+      <section id="loadingState" class="empty-state">جاري تحميل الدليل…</section>
+      <section id="professorGrid" class="professor-grid" aria-live="polite"></section>
+      <div id="emptyState" class="empty-state hidden">لا توجد نتائج مطابقة. جرّب اسمًا أو قسمًا مختلفًا.</div>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <span class="footer-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></span>
+      <div><strong>منهو ذية</strong><p>منصة طلابية مستقلة وغير رسمية.</p></div>
+    </div>
+    <p>استخدم التجارب كمرجع مساعد، وليس حكمًا نهائيًا على عضو هيئة التدريس.</p>
+  </footer>
 
   <dialog id="professorDialog" class="dialog-card wide-dialog">
     <button class="dialog-close" data-close="professorDialog" aria-label="إغلاق">×</button>
     <div id="professorContent"></div>
   </dialog>
 
-  <dialog id="reviewDialog" class="dialog-card">
+  <dialog id="reviewDialog" class="dialog-card review-dialog">
     <button class="dialog-close" data-close="reviewDialog" aria-label="إغلاق">×</button>
     <div class="dialog-header">
       <span class="mini-label">أضف تجربتك</span>
@@ -62,8 +95,10 @@
     </div>
     <form id="reviewForm" class="stack">
       <input id="reviewProfessorId" type="hidden" />
-      <label>المقرر<input id="courseName" maxlength="120" placeholder="مثال: علم الأمراض" required /></label>
-      <label>الفصل الدراسي<input id="academicTerm" maxlength="30" placeholder="مثال: 2026 - الفصل الأول" required /></label>
+      <div class="form-two-col">
+        <label>المقرر<input id="courseName" maxlength="120" placeholder="مثال: علم الأمراض" required /></label>
+        <label>الفصل الدراسي<input id="academicTerm" maxlength="30" placeholder="مثال: 2026 - الفصل الأول" required /></label>
+      </div>
 
       <div class="rating-form-grid">
         <div class="rating-field"><span>وضوح الشرح</span><div class="rating-choice" data-rating-group="clarity"></div><input id="clarity" type="hidden" required /></div>
@@ -79,7 +114,7 @@
         <span id="commentCount" class="char-count">0 / 1200</span>
       </label>
       <label class="check-row"><input id="reviewAgreement" type="checkbox" required /><span>أؤكد أن التقييم يصف تجربتي الأكاديمية وسألتزم بقواعد المجتمع.</span></label>
-      <button class="primary-btn" type="submit">إرسال التقييم</button>
+      <button class="primary-btn large-btn" type="submit">إرسال التقييم</button>
       <p id="reviewMessage" class="form-message" role="status"></p>
     </form>
   </dialog>
@@ -101,10 +136,10 @@
     <span class="mini-label">قواعد المجتمع</span>
     <h2>تجربة مفيدة، لا مساحة للإساءة</h2>
     <div class="rules">
-      <p>✓ تحدث عن المقرر والشرح والتنظيم والاختبارات والتعامل الأكاديمي.</p>
-      <p>✓ اكتب ما يفيد طالبًا سيأخذ المقرر بعدك.</p>
-      <p>× لا تنشر معلومات شخصية أو أرقام تواصل أو روابط.</p>
-      <p>× لا تستخدم السب أو السخرية أو التنمر أو الاتهامات الخطيرة.</p>
+      <p><b>✓</b> تحدث عن المقرر والشرح والتنظيم والاختبارات والتعامل الأكاديمي.</p>
+      <p><b>✓</b> اكتب ما يفيد طالبًا سيأخذ المقرر بعدك.</p>
+      <p><b>×</b> لا تنشر معلومات شخصية أو أرقام تواصل أو روابط.</p>
+      <p><b>×</b> لا تستخدم السب أو السخرية أو التنمر أو الاتهامات الخطيرة.</p>
     </div>
     <p class="tiny muted">هذه منصة طلابية مستقلة ولا تمثل الجامعة أو الكلية رسميًا.</p>
   </dialog>
