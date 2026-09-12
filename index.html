@@ -3,53 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="منهو ذية — منصة طلابية مستقلة لتبادل التجارب الأكاديمية." />
   <meta name="theme-color" content="#363367" />
   <title>منهو ذية | دخول الطلاب</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/jpeg" href="/assets/manho-logo.jpg" />
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" type="image/jpeg" href="assets/manho-logo.jpg" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="login-body">
-  <main class="login-shell">
-    <section class="brand-panel">
-      <div class="brand-image-frame">
-        <img class="brand-logo-image" src="/assets/manho-logo.jpg" alt="شعار منهو ذية" />
+  <main class="login-page">
+    <section class="login-card brand-login-card">
+      <div class="login-logo-frame">
+        <img src="assets/manho-logo.jpg" alt="شعار منهو ذية" />
       </div>
-      <div class="brand-copy">
-        <span class="eyebrow gold-eyebrow">منصة طلابية مستقلة</span>
-        <h1 class="brand-title">منهو ذية</h1>
-        <p>تجارب أكاديمية من الطلاب للطلاب، تساعدك تعرف أسلوب المقرر قبل ما تبدأ وتدخل وأنت أجهز.</p>
-        <div class="privacy-badges">
-          <span>بدون أسماء</span><span>بدون أرقام جامعية</span><span>بدون حسابات</span>
-        </div>
-      </div>
-    </section>
+      <span class="eyebrow gold-eyebrow">من الطلاب للطلاب</span>
+      <h1 class="login-title">منهو ذية</h1>
+      <p class="login-lead">تجارب طلابية تساعدك تعرف أسلوب عضو هيئة التدريس قبل بداية المقرر.</p>
 
-    <section class="login-card" aria-labelledby="login-title">
-      <div class="login-brand-mini">
-        <div class="mini-logo-frame"><img src="/assets/manho-logo.jpg" alt="" /></div>
-        <div><span class="mini-label">منهو ذية</span><strong>دخول مجتمع الطلاب</strong></div>
-      </div>
-      <div>
-        <h2 id="login-title">أدخل كلمة الدخول</h2>
-        <p class="muted">الكلمة مخصصة لطلاب الكلية فقط. لا تشاركها خارج مجتمع الطلاب.</p>
-      </div>
-      <form id="loginForm" class="stack">
+      <form id="loginForm" class="login-form">
         <label for="password">كلمة الدخول</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
-        <button class="primary-btn large-btn" type="submit">دخول المنصة</button>
-        <p id="loginMessage" class="form-message" role="status"></p>
+        <div class="password-row">
+          <input id="password" type="password" required autocomplete="current-password" placeholder="اكتب كلمة الدخول…" />
+          <button class="primary-btn" type="submit">دخول</button>
+        </div>
+        <p id="loginMessage" class="form-message" aria-live="polite"></p>
       </form>
+
       <div class="login-note">
-        <span>✦</span>
-        <p>باستخدام المنصة أنت توافق على كتابة تجارب أكاديمية محترمة وتجنب الإساءة أو نشر معلومات شخصية.</p>
+        <strong>خصوصيتك أولًا</strong>
+        <span>لا تحتاج اسمًا أو حسابًا. التقييمات مجهولة، وتخضع لقواعد المجتمع.</span>
       </div>
-      <a class="admin-link" href="/admin.html">إدارة المنصة</a>
     </section>
   </main>
-<script src="/login.js" type="module"></script>
+
+  <script type="module" src="login.js"></script>
 </body>
 </html>
