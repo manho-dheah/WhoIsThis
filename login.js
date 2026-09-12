@@ -1,8 +1,15 @@
+import { edgeApi, getSessionToken, clearSessionToken, siteUrl } from './api-client.js';
+
 (async () => {
+  const token = getSessionToken('student');
+  if (!token) return;
   try {
-    const session = await fetch('/api/session', { credentials: 'include' }).then((r) => r.json());
-    if (session.authenticated) location.replace('/app.html');
-  } catch {}
+    const session = await edgeApi('session', { role: 'student', redirectOn401: false });
+    if (session.authenticated) location.replace(siteUrl('app.html'));
+    else clearSessionToken('student');
+  } catch {
+    clearSessionToken('student');
+  }
 })();
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -14,17 +21,17 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   msg.textContent = 'جاري التحقق…';
   msg.className = 'form-message';
   try {
-    const res = await fetch('/api/login', {
+    await edgeApi('login', {
+      role: 'student',
       method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: document.getElementById('password').value }),
+      body: { password: document.getElementById('password').value },
+      redirectOn401: false,
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || 'تعذر تسجيل الدخول');
-    location.replace('/app.html');
+    location.replace(siteUrl('app.html'));
   } catch (err) {
     msg.textContent = err.message;
     msg.className = 'form-message error';
-  } finally { btn.disabled = false; }
+  } finally {
+    btn.disabled = false;
+  }
 });
