@@ -1,3 +1,5 @@
+import { legacyApi, edgeApi, clearSessionToken, siteUrl } from './api-client.js';
+
 const state = {
   professors: [],
   selectedProfessor: null,
@@ -31,18 +33,7 @@ function deviceId() {
 }
 
 async function api(path, options = {}) {
-  const res = await fetch(path, {
-    credentials: 'include',
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-  });
-  const data = await res.json().catch(() => ({}));
-  if (res.status === 401) {
-    location.replace('/');
-    throw new Error('انتهت جلسة الدخول');
-  }
-  if (!res.ok) throw new Error(data.error || 'حدث خطأ');
-  return data;
+  return legacyApi(path, options, 'student', true);
 }
 
 function showToast(message, type = 'success') {
@@ -349,20 +340,24 @@ document.getElementById('reportForm').addEventListener('submit', async (e) => {
 
 document.getElementById('guidelinesBtn').addEventListener('click', () => document.getElementById('guidelinesDialog').showModal());
 document.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', () => document.getElementById(btn.dataset.close).close()));
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await fetch('/api/logout', { credentials: 'include' });
-  location.replace('/');
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  clearSessionToken('student');
+  location.replace(siteUrl('index.html'));
 });
 
 setupRatingChoices();
 
 (async function init() {
   try {
-    const s = await fetch('/api/session', { credentials: 'include' }).then((r) => r.json());
-    if (!s.authenticated) return location.replace('/');
+    const session = await edgeApi('session', { role: 'student', redirectOn401: false });
+    if (!session.authenticated) {
+      clearSessionToken('student');
+      return location.replace(siteUrl('index.html'));
+    }
     deviceId();
     await loadProfessors();
   } catch {
-    location.replace('/');
+    clearSessionToken('student');
+    location.replace(siteUrl('index.html'));
   }
 })();
