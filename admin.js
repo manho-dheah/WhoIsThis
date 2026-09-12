@@ -1,3 +1,5 @@
+import { legacyApi, edgeApi, clearSessionToken } from './api-client.js';
+
 const loginCard = document.getElementById('adminLoginCard');
 const dashboard = document.getElementById('adminDashboard');
 const logoutBtn = document.getElementById('adminLogout');
@@ -8,14 +10,7 @@ function esc(value = '') {
 }
 
 async function api(path, options = {}) {
-  const res = await fetch(path, {
-    credentials: 'include',
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || 'حدث خطأ');
-  return data;
+  return legacyApi(path, options, 'admin', false);
 }
 
 function showToast(message, type = 'success') {
@@ -314,14 +309,17 @@ document.getElementById('refreshAdmin').addEventListener('click', async () => {
 });
 
 document.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', () => document.getElementById(btn.dataset.close).close()));
-logoutBtn.addEventListener('click', async () => {
-  await fetch('/api/admin-logout', { credentials: 'include' });
+logoutBtn.addEventListener('click', () => {
+  clearSessionToken('admin');
   location.reload();
 });
 
 (async () => {
   try {
-    const session = await fetch('/api/admin-session', { credentials: 'include' }).then((r) => r.json());
+    const session = await edgeApi('admin-session', { role: 'admin', redirectOn401: false });
     if (session.authenticated) await showDashboard();
-  } catch {}
+    else clearSessionToken('admin');
+  } catch {
+    clearSessionToken('admin');
+  }
 })();
